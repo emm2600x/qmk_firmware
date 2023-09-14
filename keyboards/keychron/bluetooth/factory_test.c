@@ -325,14 +325,14 @@ void factory_test_rx(uint8_t *data, uint8_t length) {
     }
 }
 
-bool dip_switch_update_user(uint8_t index, bool active) {
-    if (report_os_sw_state) {
-#ifdef INVERT_OS_SWITCH_STATE
-        active = !active;
-#endif
-        uint8_t payload[3] = {FACTORY_TEST_CMD_OS_SWITCH, OS_SWITCH, active};
-        factory_test_send(payload, 3);
-    }
+// bool dip_switch_update_user(uint8_t index, bool active) {
+//     if (report_os_sw_state) {
+// #ifdef INVERT_OS_SWITCH_STATE
+//         active = !active;
+// #endif
+//         uint8_t payload[3] = {FACTORY_TEST_CMD_OS_SWITCH, OS_SWITCH, active};
+//         factory_test_send(payload, 3);
+//     }
 
-    return true;
-}
+//     return true;
+// }
