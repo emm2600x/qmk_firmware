@@ -30,7 +30,83 @@ enum custom_keycodes {
   LM_3, // red static
   LM_T // RGB toggle
 };
+/*
+    Description: List of tap dances
 
+    * LIGHTS = Windows
+*/
+enum tap_dance_key_event {
+    LIGHTS,
+};
+
+/*
+    Description: Possible states for a given tap dance
+
+    * SINGLE_HOLD   = 1: Activates while holding the key
+    * SINGLE_TAP    = 2: Activates when pressing the key once
+    * DOUBLE_TAP    = 3: Activates when pressing the key 2 times in quick succession
+    * TRIPLE_TAP    = 4: Activates when pressing the key 3 times in quick succession
+*/
+enum tap_dance_state {
+    SINGLE_HOLD = 1,
+    SINGLE_TAP = 2,
+    DOUBLE_TAP = 3,
+    TRIPLE_TAP = 4,
+};
+
+/**
+ * @brief Determines the state from tap dance state and converts to custom action
+ * @returns Value of `tap_dance_state`
+ */
+int cur_dance(tap_dance_state_t *state) {
+    if (state->pressed) {
+        return SINGLE_HOLD;
+    }
+    if (state->count == 1) {
+        return SINGLE_TAP;
+    }
+    if (state->count == 2) {
+        return DOUBLE_TAP;
+    }
+    if (state->count == 3) {
+        return TRIPLE_TAP;
+    }
+
+    return -1;
+}
+
+void lighting_td_finished(tap_dance_state_t *state, void *user_data) {
+    lighting_td_state = cur_dance(state);
+    switch (lighting_td_finished) {
+        case DOUBLE_TAP:
+            rgb_hsv = rgb_matrix_get_hsv();
+            if (rgb_matrix_get_hue() == 36) {
+                rgb_matrix_set_color_all(HSV_RED);
+            } else if (rgb_matrix_get_hue() == 0) {
+                rgb_matrix_set_color_all(HSV_GOLD);
+            } else {
+                rgb_matrix_mode(RGB_MATRIX_CYCLE_LEFT_RIGHT);
+            }
+            break;
+        case SINGLE_HOLD:
+                if (rgb_matrix_is_enabled()) {
+                    rgb_matrix_disable();
+                } else {
+                    rgb_matrix_enable();
+                }
+            break;
+        default:
+            break;
+    }
+}
+
+/*
+    Description: Associate tap dance with defined functionality
+*/
+qk_tap_dance_action_t tap_dance_actions[] = {
+    // Knob 0: Hold - Shift, One - (, Two - {, Three - [
+    [LIGHTS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lighting_td_finished, NULL),
+};
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_ansi_82(
         KC_ESC,   KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,   KC_F12,   KC_DEL,             KC_MUTE,
@@ -42,7 +118,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [FN_1] = LAYOUT_ansi_82(
         KC_TRNS,  KC_BRID,  KC_BRIU,  KC_TASK,  KC_FILE,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,  KC_VOLU,  KC_TRNS,            RGB_TOG,
-        KC_TRNS,  BT_HST1,  BT_HST2,  BT_HST3,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,            KC_TRNS,
+        KC_TRNS,  BT_HST1,  BT_HST2,  BT_HST3,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  TD(LIGHTS),  KC_TRNS,            KC_TRNS,
         RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,            KC_TRNS,
         KC_TRNS,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,            KC_TRNS,            KC_END,
         KC_TRNS,            KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  BAT_LVL,  NK_TOGG,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,            KC_TRNS,  KC_TRNS,
