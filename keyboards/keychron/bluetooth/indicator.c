@@ -111,7 +111,7 @@ static pin_t host_led_pin_list[HOST_DEVICES_COUNT] = HOST_LED_PIN_LIST;
 #ifdef RGB_MATRIX_ENABLE
 #    define LED_DRIVER rgb_matrix_driver
 #    define LED_INDICATORS_KB rgb_matrix_indicators_kb
-#    define LED_INDICATORS_USER rgb_matrix_indicators_user
+#    define LED_INDICATORS_USER rgb_matrix_indicators_bt
 #    define LED_NONE_INDICATORS_KB rgb_matrix_none_indicators_kb
 #    define SET_ALL_LED_OFF() rgb_matrix_set_color_all(0, 0, 0)
 #    define SET_LED_OFF(idx) rgb_matrix_set_color(idx, 0, 0, 0)

@@ -22,3 +22,5 @@
 void process_record_factory_reset(uint16_t keycode, keyrecord_t *record);
 void factory_reset_task(void);
 void factory_test_rx(uint8_t *data, uint8_t length);
+bool dip_switch_update_bt(uint8_t index, bool active);
+bool rgb_matrix_indicators_bt(void);
