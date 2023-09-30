@@ -19,6 +19,10 @@
 #include "config.h"
 #include "bluetooth.h"
 
+#ifdef RGB_MATRIX_ENABLE
+    bool rgb_matrix_indicators_bt(void);
+#endif
+
 /* Indication of pairing */
 #ifndef INDICATOR_CONFIG_PARING
 #    define INDICATOR_CONFIG_PARING {INDICATOR_BLINK, 1000, 1000, 0, true, 0};
