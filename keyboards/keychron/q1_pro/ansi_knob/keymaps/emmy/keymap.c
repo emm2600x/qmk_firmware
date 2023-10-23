@@ -23,7 +23,8 @@ enum layers{
     FN_2,
     FN_3,
     FN_4,
-    FN_5
+    FN_5,
+    FN_6
 };
 
 enum custom_keycodes {
@@ -172,12 +173,33 @@ void tap_dance_val_reset(tap_dance_state_t *state, void *user_data) {
     layer_on(BASE);
 }
 
+void tap_dance_spd_finished(tap_dance_state_t *state, void *user_data) {
+    int hue_td_state = cur_dance(state);
+
+    switch (hue_td_state) {
+        case SINGLE_HOLD:
+            layer_on(FN_6);
+            break;
+        case SINGLE_TAP:
+            tap_code(KC_F12);
+            break;
+        default:
+            break;
+    }
+}
+
+void tap_dance_spd_reset(tap_dance_state_t *state, void *user_data) {
+    layer_clear();
+    layer_on(BASE);
+}
+
 enum tap_dance_key_event {
     T_SND,
     T_HUE,
     T_SAT,
     T_VAL,
-    T_MOD
+    T_MOD,
+    T_SPD
 };
 
 
@@ -190,6 +212,7 @@ tap_dance_action_t tap_dance_actions[] = {
     [T_HUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tap_dance_hue_finished, tap_dance_hue_reset),
     [T_SAT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tap_dance_sat_finished, tap_dance_sat_reset),
     [T_VAL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tap_dance_val_finished, tap_dance_val_reset),
+    [T_SPD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tap_dance_spd_finished, tap_dance_spd_reset),
 
 };
 
@@ -236,7 +259,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,   KC_TRNS,  KC_TRNS,            KC_TRNS,
         KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,             KC_TRNS,            KC_TRNS,
         KC_TRNS,            KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,             KC_TRNS,  KC_TRNS,
-        KC_TRNS,  KC_TRNS,  KC_TRNS,                                KC_TRNS,                                KC_TRNS,  KC_TRNS,   MO(FN_3),  KC_TRNS,  KC_TRNS,  KC_TRNS
+        KC_TRNS,  KC_TRNS,  KC_TRNS,                                KC_TRNS,                                KC_TRNS,  KC_TRNS,   MO(FN_3), KC_TRNS,  KC_TRNS,  KC_TRNS
     ),
 
     [FN_5] = LAYOUT_ansi_82(
@@ -244,6 +267,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,   KC_TRNS,  KC_TRNS,            QK_BOOT,
         KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,   KC_TRNS,  KC_TRNS,            DB_TOGG,
         KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,             KC_TRNS,            EE_CLR ,
+        KC_TRNS,            KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,             KC_TRNS,  KC_TRNS,
+        KC_TRNS,  KC_TRNS,  KC_TRNS,                                KC_TRNS,                                KC_TRNS,  KC_TRNS,   KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS
+    ),
+    [FN_6] = LAYOUT_ansi_82(
+        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,   KC_TRNS,  KC_TRNS,            KC_TRNS,
+        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,   KC_TRNS,  KC_TRNS,            KC_TRNS,
+        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,   KC_TRNS,  KC_TRNS,            KC_TRNS,
+        KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,             KC_TRNS,            KC_TRNS,
         KC_TRNS,            KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS,             KC_TRNS,  KC_TRNS,
         KC_TRNS,  KC_TRNS,  KC_TRNS,                                KC_TRNS,                                KC_TRNS,  KC_TRNS,   KC_TRNS,  KC_TRNS,  KC_TRNS,  KC_TRNS
     ),
@@ -256,7 +287,8 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [FN_2] = {ENCODER_CCW_CW(RGB_RMOD, RGB_MOD)},
     [FN_3] = {ENCODER_CCW_CW(RGB_HUD, RGB_HUI)},
     [FN_4] = {ENCODER_CCW_CW(RGB_SAD, RGB_SAI)},
-    [FN_5] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)}
+    [FN_5] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI)},
+    [FN_6] = {ENCODER_CCW_CW(RGB_SPD, RGB_SPI)}
 };
 #endif // ENCODER_MAP_ENABLE
 
@@ -280,6 +312,9 @@ bool rgb_matrix_indicators_user(void) {
             rgb_matrix_set_color(5, RGB_RED);
             break;
         case FN_5:
+            rgb_matrix_set_color(5, RGB_RED);
+            break;
+        case FN_6:
             rgb_matrix_set_color(5, RGB_RED);
             break;
         default:

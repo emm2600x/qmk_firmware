@@ -1,6 +1,6 @@
 #pragma once
 
-#define DYNAMIC_KEYMAP_LAYER_COUNT 6
+#define DYNAMIC_KEYMAP_LAYER_COUNT 7
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_RAINBOW_MOVING_CHEVRON // Sets the default mode if none has been set
 #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_RAINBOW_MOVING_CHEVRON // Sets the default mode if none has been set
 // #define RGB_MATRIX_STARTUP_HUE 255 // Sets the default hue value if none has been set
